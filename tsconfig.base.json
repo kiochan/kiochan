@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@kiochan/next-ui-portal": ["lib/next-ui-portal/src/index.ts"],
+      "@kiochan/next-ui-portal/server": ["lib/next-ui-portal/src/server.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
