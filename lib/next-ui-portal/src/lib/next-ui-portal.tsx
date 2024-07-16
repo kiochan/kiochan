@@ -2,7 +2,7 @@
 export interface NextUiPortalProps {}
 
 export function NextUiPortal(props: NextUiPortalProps) {
-  return <span>Welcome to NextUiPortal!</span>;
+  return <h1>Welcome to NextUiPortal!</h1>;
 }
 
 export default NextUiPortal;

@@ -15,7 +15,14 @@
     ],
     "sharedGlobals": []
   },
-  "nxCloudAccessToken": "YjFhMzRiNjYtYmU5ZS00ODczLTljYjMtZmFjM2JiNTNkZjQ5fHJlYWQtd3JpdGU=",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nx/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
   "plugins": [
     {
       "plugin": "@nx/next/plugin",
