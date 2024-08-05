@@ -11,6 +11,13 @@ permissions:
 
 env:
   NODE_VERSION: 20
+  PORT_APP_WEB: '${{ vars.PORT_APP_WEB }}'
+  PM2_JOB_NAME_APP_WEB: '${{ vars.PM2_JOB_NAME_APP_WEB }}'
+  SERVER_DIR: '${{ secrets.SERVER_DIR }}'
+  SERVER_HOST: '${{ secrets.SERVER_HOST }}'
+  SERVER_PASSWORD: '${{ secrets.SERVER_PASSWORD }}'
+  SERVER_USER: '${{ secrets.SERVER_USER }}'
+  REPO_NAME: '${{ github.repository }}'
 
 jobs:
   setup:
@@ -104,14 +111,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-      - name: Cache next build outputs
-        id: cache-next-build
+      - name: Cache build outputs
+        id: cache-build
         uses: actions/cache@v3
         with:
-          path: '**/.next'
-          key: ${{ runner.os }}-next_dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
+          path: 'dist'
+          key: ${{ runner.os }}-dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
           restore-keys: |
-            ${{ runner.os }}-next_dist-
+            ${{ runner.os }}-dist-
 
       - name: Install dependencies
         run: npm ci
@@ -119,7 +126,7 @@ jobs:
 
       - name: Run build
         run: npx nx affected --verbose --base=origin/dev --target=build
-        if: steps.cache-next-build.outputs.cache-hit != 'true'
+        if: steps.cache-build.outputs.cache-hit != 'true'
 
   test:
     runs-on: ubuntu-latest
@@ -191,13 +198,13 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Restore next build cache
-        id: cache-next-build
+        id: cache-build
         uses: actions/cache@v3
         with:
           path: '**/.next'
-          key: ${{ runner.os }}-next_dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
+          key: ${{ runner.os }}-dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
           restore-keys: |
-            ${{ runner.os }}-next_dist-
+            ${{ runner.os }}-dist-
 
       - name: Install dependencies
         run: npm ci
@@ -205,10 +212,90 @@ jobs:
 
       - name: Run build
         run: npx nx affected --verbose --base=origin/dev --target=build
-        if: steps.cache-next-build.outputs.cache-hit != 'true'
+        if: steps.cache-build.outputs.cache-hit != 'true'
 
       - name: Set HOME environment variable
         run: echo "HOME=/root" >> $GITHUB_ENV
 
       - name: Run e2e tests
         run: npx nx affected --verbose --base=origin/dev --target=e2e
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/prod' }}
+    needs: [build, test, e2e]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Stop service
+        run: |
+          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
+            pm2 delete "${PM2_JOB_NAME_APP_WEB}" || true
+          EOF
+
+      - name: Sync files
+        run: |
+          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
+            if [ ! -d "${SERVER_DIR}" ]; then
+              git clone https://github.com/${REPO_NAME} ${SERVER_DIR}
+            else
+              cd ${SERVER_DIR}
+                git fetch origin
+                if ! git reset --hard origin/prod; then
+                  cd ..
+                    rm -rf ${SERVER_DIR}
+                    git clone https://github.com/${REPO_NAME} ${SERVER_DIR}
+                fi
+            fi
+          EOF
+
+      - name: Build
+        run: |
+          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
+            cd ${SERVER_DIR}
+              npm ci
+              npx nx build app-web
+              if [ $? -ne 0 ]; then
+                echo "NX build faild"
+                echo "Reset nx workspace"
+                npm ci
+                nx reset
+                npx nx build app-web
+                if [ $? -ne 0 ]; then
+                  echo "NX build faild and unable to be fixed automatically"
+                  exit 1
+                fi
+              fi
+          EOF
+
+      - name: Start service
+        run: |
+          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
+            cd ${SERVER_DIR}
+            pm2 start "npx nx start app-web -p ${PORT_APP_WEB}" --name "${PM2_JOB_NAME_APP_WEB}" --update-env
+            pm2 save
+            echo "PM2 updated successfully"
+          EOF
+
+      - name: Check PM2 service status
+        run: |
+          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
+            systemctl is-active --quiet pm2-${SERVER_USER}.service
+            if [ $? -ne 0 ]; then
+              echo "PM2 service is not running"
+              exit 1
+            fi
+            echo "PM2 service is running"
+          EOF
