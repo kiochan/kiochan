@@ -29,7 +29,9 @@
     ".next/types/**/*.ts",
     "dist/types/**/*.ts",
     "../../dist/types/**/*.ts",
-    "../../dist/app-web/types/**/*.ts"
+    "../../dist/app-web/types/**/*.ts",
+    "../../lib/next-ui-portal/src/types/index.ts",
+    "../../lib/next-ui-portal/src/defs/next-ui.config.ts"
   ],
   "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]
 }
