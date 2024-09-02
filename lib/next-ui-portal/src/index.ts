@@ -1,3 +1,8 @@
 // Use this file to export React client components (e.g. those with 'use client' directive) or other non-server utilities
 
-export * from './lib/next-ui-portal';
+export * from './defs';
+export * from './portal';
+export * from './helpers';
+export * from './components';
+
+export type * from './types';
