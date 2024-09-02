@@ -249,14 +249,14 @@ jobs:
         run: |
           sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
             if [ ! -d "${SERVER_DIR}" ]; then
-              git clone https://github.com/${REPO_NAME} ${SERVER_DIR}
+              git clone git@github.com:${REPO_NAME}.git ${SERVER_DIR}
             else
               cd ${SERVER_DIR}
-                git fetch origin
+                git fetch origin prod
                 if ! git reset --hard origin/prod; then
                   cd ..
                     rm -rf ${SERVER_DIR}
-                    git clone https://github.com/${REPO_NAME} ${SERVER_DIR}
+                    git clone git@github.com:${REPO_NAME}.git ${SERVER_DIR}
                 fi
             fi
           EOF
