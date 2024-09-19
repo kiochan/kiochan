@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "commit": "czg"
+    "commit": "czg",
+    "start": "npm run start:web",
+    "start:web": "nx dev app-web"
   },
   "config": {
     "commitizen": {
