@@ -37,18 +37,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
       - name: Install dependencies
         run: npm ci
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
   lint:
     runs-on: ubuntu-latest
@@ -60,26 +50,13 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Fetch dev branch
-        run: git fetch origin dev:refs/remotes/origin/dev
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Restore node_modules cache
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
       - name: Install dependencies
         run: npm ci
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
       - name: Run lint
         run: npx nx affected --verbose --base=origin/dev --target=lint
@@ -94,39 +71,16 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Fetch dev branch
-        run: git fetch origin dev:refs/remotes/origin/dev
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Restore node_modules cache
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
-      - name: Cache build outputs
-        id: cache-build
-        uses: actions/cache@v3
-        with:
-          path: 'dist'
-          key: ${{ runner.os }}-dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-dist-
-
       - name: Install dependencies
         run: npm ci
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
       - name: Run build
         run: npx nx affected --verbose --base=origin/dev --target=build
-        if: steps.cache-build.outputs.cache-hit != 'true'
 
   test:
     runs-on: ubuntu-latest
@@ -138,26 +92,13 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Fetch dev branch
-        run: git fetch origin dev:refs/remotes/origin/dev
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Restore node_modules cache
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
       - name: Install dependencies
         run: npm ci
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
       - name: Run tests
         run: npx nx affected --verbose --base=origin/dev --target=test
@@ -188,36 +129,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Restore node_modules cache
-        id: cache-node-modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
-      - name: Restore next build cache
-        id: cache-build
-        uses: actions/cache@v3
-        with:
-          path: '**/.next'
-          key: ${{ runner.os }}-dist-${{ hashFiles('**/package-lock.json', '**/app/**/src/**/*.ts', '**/lib/**/src/**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-dist-
-
       - name: Install dependencies
         run: npm ci
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-
-      - name: Run build
-        run: npx nx affected --verbose --base=origin/dev --target=build
-        if: steps.cache-build.outputs.cache-hit != 'true'
-
-      - name: Set HOME environment variable
-        run: echo "HOME=/root" >> $GITHUB_ENV
 
       - name: Run e2e tests
+        env:
+          HOME: /root
         run: npx nx affected --verbose --base=origin/dev --target=e2e
 
   deploy:
@@ -268,13 +185,13 @@ jobs:
               npm ci
               npx nx build app-web
               if [ $? -ne 0 ]; then
-                echo "NX build faild"
+                echo "NX build failed"
                 echo "Reset nx workspace"
                 npm ci
                 nx reset
                 npx nx build app-web
                 if [ $? -ne 0 ]; then
-                  echo "NX build faild and unable to be fixed automatically"
+                  echo "NX build failed and unable to be fixed automatically"
                   exit 1
                 fi
               fi
