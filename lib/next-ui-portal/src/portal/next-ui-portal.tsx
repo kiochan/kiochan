@@ -2,7 +2,7 @@
 
 import { Provider, ProviderProps } from './provider';
 import { Navbar } from '../components/navbar';
-import { Pages } from '../types/page-config';
+import type { Pages } from '../types/page-config';
 
 /* eslint-disable-next-line */
 export interface NextUiPortalProps {

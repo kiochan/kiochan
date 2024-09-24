@@ -1,4 +1,4 @@
-import { MainConfig } from '@kiochan/next-ui-portal/types';
+import type { MainConfig } from '@kiochan/next-ui-portal';
 
 export const globalConfig = {
   site: { name: "Kio's Home", language: 'en' },
