@@ -29,13 +29,24 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Fetch dev branch
-        run: git fetch origin dev:refs/remotes/origin/dev
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ env.NODE_VERSION }}-
+
+      - name: Cache Nx build cache
+        uses: actions/cache@v3
+        with:
+          path: .nx/cache
+          key: ${{ runner.os }}-nx-build-${{ hashFiles('**/project.json', '**/workspace.json', '**/nx.json') }}
 
       - name: Install dependencies
         run: npm ci
@@ -158,30 +169,30 @@ jobs:
 
       - name: Stop service
         run: |
-          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
-            pm2 delete "${PM2_JOB_NAME_APP_WEB}" || true
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+            pm2 delete "${{ vars.PM2_JOB_NAME_APP_WEB }}" || true
           EOF
 
       - name: Sync files
         run: |
-          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
-            if [ ! -d "${SERVER_DIR}" ]; then
-              git clone git@github.com:${REPO_NAME}.git ${SERVER_DIR}
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+            if [ ! -d "${{ secrets.SERVER_DIR }}" ]; then
+              git clone git@github.com:${{ github.repository }}.git ${{ secrets.SERVER_DIR }}
             else
-              cd ${SERVER_DIR}
+              cd ${{ secrets.SERVER_DIR }}
                 git fetch origin prod
                 if ! git reset --hard origin/prod; then
                   cd ..
-                    rm -rf ${SERVER_DIR}
-                    git clone git@github.com:${REPO_NAME}.git ${SERVER_DIR}
+                    rm -rf ${{ secrets.SERVER_DIR }}
+                    git clone git@github.com:${{ github.repository }}.git ${{ secrets.SERVER_DIR }}
                 fi
             fi
           EOF
 
       - name: Build
         run: |
-          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
-            cd ${SERVER_DIR}
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+            cd ${{ secrets.SERVER_DIR }}
               npm ci
               npx nx build app-web
               if [ $? -ne 0 ]; then
@@ -199,17 +210,17 @@ jobs:
 
       - name: Start service
         run: |
-          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
-            cd ${SERVER_DIR}
-            pm2 start "npx nx start app-web -p ${PORT_APP_WEB}" --name "${PM2_JOB_NAME_APP_WEB}" --update-env
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+            cd ${{ secrets.SERVER_DIR }}
+            pm2 start "npx nx start app-web -p ${{ vars.PORT_APP_WEB }}" --name "${{ vars.PM2_JOB_NAME_APP_WEB }}" --update-env
             pm2 save
             echo "PM2 updated successfully"
           EOF
 
       - name: Check PM2 service status
         run: |
-          sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${SERVER_HOST} <<EOF
-            systemctl is-active --quiet pm2-${SERVER_USER}.service
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} <<EOF
+            systemctl is-active --quiet pm2-${{ secrets.SERVER_USER }}.service
             if [ $? -ne 0 ]; then
               echo "PM2 service is not running"
               exit 1
