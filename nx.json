@@ -74,5 +74,6 @@
         "unitTestRunner": "jest"
       }
     }
-  }
+  },
+  "nxCloudAccessToken": "OWRiZDk1OTMtOTU3OC00OWUwLWIxMGMtODExZjkxN2QwMTY4fHJlYWQtd3JpdGU="
 }
