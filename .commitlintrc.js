@@ -1,9 +1,87 @@
-// .commitlintrc.js
-/** @type {import('cz-git').UserConfig} */
-module.exports = {
-  rules: {
-    // @see: https://commitlint.js.org/#/reference-rules
+// Function to format commit types with aligned spaces
+function formatCommitTypes(types) {
+  // Step 1: Find the longest `type` string length
+  const maxLength = Math.max(...types.map((type) => type.type.length));
+
+  // Step 2: Map over the types and format them
+  return types.map((type) => {
+    // Calculate the number of spaces needed to align the text
+    const spaces = ' '.repeat(maxLength - type.type.length + 1);
+    return {
+      value: type.type,
+      name: `${type.type}:${spaces}${type.text}`, // Concatenate type, spaces, and text
+      emoji: `:${type.emoji}:`,
+    };
+  });
+}
+
+// Raw commit types without formatting
+const rawCommitTypes = [
+  { type: 'feat', text: 'A new feature', emoji: 'sparkles' },
+  { type: 'fix', text: 'A bug fix', emoji: 'bug' },
+  { type: 'docs', text: 'Documentation only changes', emoji: 'memo' },
+  {
+    type: 'style',
+    text: 'Changes that do not affect the meaning of the code',
+    emoji: 'lipstick',
   },
+  {
+    type: 'refactor',
+    text: 'A code change that neither fixes a bug nor adds a feature',
+    emoji: 'recycle',
+  },
+  {
+    type: 'perf',
+    text: 'A code change that improves performance',
+    emoji: 'zap',
+  },
+  {
+    type: 'test',
+    text: 'Adding missing tests or correcting existing tests',
+    emoji: 'white_check_mark',
+  },
+  {
+    type: 'build',
+    text: 'Changes that affect the build system or external dependencies',
+    emoji: 'package',
+  },
+  {
+    type: 'ci',
+    text: 'Changes to our CI configuration files and scripts',
+    emoji: 'ferris_wheel',
+  },
+  {
+    type: 'chore',
+    text: "Other changes that don't modify src or test files",
+    emoji: 'hammer',
+  },
+  { type: 'revert', text: 'Reverts a previous commit', emoji: 'rewind' },
+];
+
+// Apply formatting to the commit types
+const commitTypes = formatCommitTypes(rawCommitTypes);
+
+/** @type {import('@commitlint/types').UserConfig} */
+const commitlintConfig = {
+  extends: ['@commitlint/config-conventional'], // Extends conventional commit rules
+  rules: {
+    // Use the formatted commit types for the commitlint rules
+    'type-enum': [2, 'always', commitTypes.map((type) => type.value)],
+    'subject-case': [2, 'never', ['sentence-case']], // Do not enforce capitalization on the subject
+    'header-max-length': [2, 'always', 72], // Limit the commit message header to 72 characters
+  },
+  ignores: [
+    (commitMessage) => {
+      return (
+        commitMessage.trim() === 'draft' ||
+        commitMessage.trim().startsWith('draft: ')
+      );
+    },
+  ], // Ignore commitlint rules if the message starts with 'draft'
+};
+
+/** @type {import('cz-git').UserConfig} */
+const czgitConfig = {
   prompt: {
     alias: { fd: 'docs: fix typos' },
     messages: {
@@ -22,55 +100,7 @@ module.exports = {
       generatedSelectByAI: 'Select suitable subject by AI generated:',
       confirmCommit: 'Are you sure you want to proceed with the commit above?',
     },
-    types: [
-      { value: 'feat', name: 'feat:     A new feature', emoji: ':sparkles:' },
-      { value: 'fix', name: 'fix:      A bug fix', emoji: ':bug:' },
-      {
-        value: 'docs',
-        name: 'docs:     Documentation only changes',
-        emoji: ':memo:',
-      },
-      {
-        value: 'style',
-        name: 'style:    Changes that do not affect the meaning of the code',
-        emoji: ':lipstick:',
-      },
-      {
-        value: 'refactor',
-        name: 'refactor: A code change that neither fixes a bug nor adds a feature',
-        emoji: ':recycle:',
-      },
-      {
-        value: 'perf',
-        name: 'perf:     A code change that improves performance',
-        emoji: ':zap:',
-      },
-      {
-        value: 'test',
-        name: 'test:     Adding missing tests or correcting existing tests',
-        emoji: ':white_check_mark:',
-      },
-      {
-        value: 'build',
-        name: 'build:    Changes that affect the build system or external dependencies',
-        emoji: ':package:',
-      },
-      {
-        value: 'ci',
-        name: 'ci:       Changes to our CI configuration files and scripts',
-        emoji: ':ferris_wheel:',
-      },
-      {
-        value: 'chore',
-        name: "chore:    Other changes that don't modify src or test files",
-        emoji: ':hammer:',
-      },
-      {
-        value: 'revert',
-        name: 'revert:   Reverts a previous commit',
-        emoji: ':rewind:',
-      },
-    ],
+    types: commitTypes, // Use the formatted commit types for the prompt
     useEmoji: false,
     emojiAlign: 'center',
     useAI: false,
@@ -89,18 +119,15 @@ module.exports = {
     breaklineChar: '|',
     skipQuestions: [],
     issuePrefixes: [
-      { value: 'closed', name: 'closed:   ISSUES has been processed' },
+      { value: 'closed', name: 'closed: ISSUES has been processed' },
     ],
     customIssuePrefixAlign: 'top',
     emptyIssuePrefixAlias: 'skip',
     customIssuePrefixAlias: 'custom',
-    allowCustomIssuePrefix: true,
-    allowEmptyIssuePrefix: true,
-    confirmColorize: true,
-    scopeOverrides: undefined,
-    defaultBody: '',
-    defaultIssues: '',
-    defaultScope: '',
-    defaultSubject: '',
   },
+};
+
+module.exports = {
+  ...commitlintConfig,
+  ...czgitConfig,
 };
