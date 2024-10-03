@@ -117,7 +117,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.45.1-jammy
+      image: mcr.microsoft.com/playwright:v1.47.2-jammy
     needs: build
     steps:
       - name: Checkout repository
