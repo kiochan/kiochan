@@ -15,14 +15,6 @@
     ],
     "sharedGlobals": []
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nx/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
-    }
-  },
   "plugins": [
     {
       "plugin": "@nx/next/plugin",
@@ -75,5 +67,10 @@
       }
     }
   },
-  "nxCloudAccessToken": "OWRiZDk1OTMtOTU3OC00OWUwLWIxMGMtODExZjkxN2QwMTY4fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "OWRiZDk1OTMtOTU3OC00OWUwLWIxMGMtODExZjkxN2QwMTY4fHJlYWQtd3JpdGU=",
+  "targetDefaults": {
+    "e2e-ci--**/**": {
+      "dependsOn": ["^build"]
+    }
+  }
 }
