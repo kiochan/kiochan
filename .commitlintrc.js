@@ -1,18 +1,18 @@
 // Function to format commit types with aligned spaces
 function formatCommitTypes(types) {
   // Step 1: Find the longest `type` string length
-  const maxLength = Math.max(...types.map((type) => type.type.length));
+  const maxLength = Math.max(...types.map((type) => type.type.length))
 
   // Step 2: Map over the types and format them
   return types.map((type) => {
     // Calculate the number of spaces needed to align the text
-    const spaces = ' '.repeat(maxLength - type.type.length + 1);
+    const spaces = ' '.repeat(maxLength - type.type.length + 1)
     return {
       value: type.type,
       name: `${type.type}:${spaces}${type.text}`, // Concatenate type, spaces, and text
       emoji: `:${type.emoji}:`,
-    };
-  });
+    }
+  })
 }
 
 // Raw commit types without formatting
@@ -56,10 +56,10 @@ const rawCommitTypes = [
     emoji: 'hammer',
   },
   { type: 'revert', text: 'Reverts a previous commit', emoji: 'rewind' },
-];
+]
 
 // Apply formatting to the commit types
-const commitTypes = formatCommitTypes(rawCommitTypes);
+const commitTypes = formatCommitTypes(rawCommitTypes)
 
 /** @type {import('@commitlint/types').UserConfig} */
 const commitlintConfig = {
@@ -75,10 +75,10 @@ const commitlintConfig = {
       return (
         commitMessage.trim() === 'draft' ||
         commitMessage.trim().startsWith('draft: ')
-      );
+      )
     },
   ], // Ignore commitlint rules if the message starts with 'draft'
-};
+}
 
 /** @type {import('cz-git').UserConfig} */
 const czgitConfig = {
@@ -125,9 +125,9 @@ const czgitConfig = {
     emptyIssuePrefixAlias: 'skip',
     customIssuePrefixAlias: 'custom',
   },
-};
+}
 
 module.exports = {
   ...commitlintConfig,
   ...czgitConfig,
-};
+}

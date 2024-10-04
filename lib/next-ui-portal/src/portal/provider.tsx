@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { NextUIProvider, NextUIProviderProps } from '@nextui-org/system';
-import { StrictMode, useEffect } from 'react';
+import { NextUIProvider, NextUIProviderProps } from '@nextui-org/system'
+import { StrictMode, useEffect } from 'react'
 
 export interface ProviderProps {
-  navigate: NextUIProviderProps['navigate'];
-  children: React.ReactNode;
-  darkMode?: boolean;
+  navigate: NextUIProviderProps['navigate']
+  children: React.ReactNode
+  darkMode?: boolean
 }
 
 export function Provider(props: ProviderProps) {
   useEffect(() => {
     if (props.darkMode) {
-      document.body.classList.add('dark');
+      document.body.classList.add('dark')
     } else {
-      document.body.classList.remove('dark');
+      document.body.classList.remove('dark')
     }
-  }, [props.darkMode]);
+  }, [props.darkMode])
 
   return (
     <StrictMode>
@@ -30,5 +30,5 @@ export function Provider(props: ProviderProps) {
         </main>
       </NextUIProvider>
     </StrictMode>
-  );
+  )
 }

@@ -1,18 +1,18 @@
-import { Viewport } from 'next/types';
-import { globalConfig } from '../defs/global-config';
-import './global.css';
+import { Viewport } from 'next/types'
+import { globalConfig } from '../defs/global-config'
+import './global.css'
 
-import { Providers } from '../helper/providers';
-import { getBodyClassName } from '@kiochan/next-ui-portal';
+import { Providers } from '../helper/providers'
+import { getBodyClassName } from '@kiochan/next-ui-portal'
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-};
+}
 
 export interface RootLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function RootLayout(props: RootLayoutProps) {
@@ -22,5 +22,5 @@ export default function RootLayout(props: RootLayoutProps) {
         <Providers>{props.children}</Providers>
       </body>
     </html>
-  );
+  )
 }
