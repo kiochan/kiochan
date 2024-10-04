@@ -1,10 +1,15 @@
-import { defineConfig, devices } from '@playwright/test';
-import { nxE2EPreset } from '@nx/playwright/preset';
+import { defineConfig, devices } from '@playwright/test'
+import { nxE2EPreset } from '@nx/playwright/preset'
 
-import { workspaceRoot } from '@nx/devkit';
+import { workspaceRoot } from '@nx/devkit'
 
 // For CI, you may want to set BASE_URL to the deployed application.
-const baseURL = process.env['BASE_URL'] || 'http://127.0.0.1:3000';
+const baseURL =
+  typeof process.env.BASE_URL === 'string'
+    ? process.env.BASE_URL
+    : 'http://127.0.0.1:3000'
+
+const isCi = Boolean(process.env.CI)
 
 /**
  * Read environment variables from file.
@@ -27,7 +32,7 @@ export default defineConfig({
   webServer: {
     command: 'npx nx start app-web',
     url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !isCi,
     cwd: workspaceRoot,
   },
   projects: [
@@ -66,4 +71,4 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     } */
   ],
-});
+})

@@ -30,6 +30,6 @@
     "dist/types/**/*.ts",
     "../../dist/types/**/*.ts",
     "../../dist/app-web/types/**/*.ts"
-  ],
-  "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]
+, "eslint.config.js"  ],
+  "exclude": ["node_modules", "jest.config.js", "**/*.spec.ts", "**/*.test.ts"]
 }
