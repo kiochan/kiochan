@@ -1,4 +1,4 @@
-import type { MainConfig } from '@kiochan/next-ui-portal';
+import type { MainConfig } from '@kiochan/next-ui-portal'
 
 export const globalConfig = {
   site: { name: "Kio's Home", language: 'en' },
@@ -62,4 +62,4 @@ export const globalConfig = {
       showOnSidebar: false,
     },
   ],
-} as const satisfies MainConfig;
+} as const satisfies MainConfig

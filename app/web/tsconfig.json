@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "dist/types/**/*.ts",
     "../../dist/types/**/*.ts",
-    "../../dist/app-web/types/**/*.ts"
-, "eslint.config.js"  ],
+    "../../dist/app-web/types/**/*.ts",
+    "eslint.config.js"
+  ],
   "exclude": ["node_modules", "jest.config.js", "**/*.spec.ts", "**/*.test.ts"]
 }

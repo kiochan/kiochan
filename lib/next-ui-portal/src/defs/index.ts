@@ -1,1 +1,1 @@
-export * from './next-ui.config';
+export * from './next-ui.config'

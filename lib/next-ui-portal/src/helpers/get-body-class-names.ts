@@ -1,12 +1,12 @@
-import { MainConfig } from '../types';
+import { MainConfig } from '../types'
 
 export function getBodyClassName(config: MainConfig): string {
-  const darkMode = config.appearance.darkMode;
+  const darkMode = config.appearance.darkMode
 
-  const classNames = ['text-foreground', 'bg-background'];
+  const classNames = ['text-foreground', 'bg-background']
   if (darkMode) {
-    return ['dark', ...classNames].join(' ');
+    return ['dark', ...classNames].join(' ')
   }
 
-  return classNames.join(' ');
+  return classNames.join(' ')
 }

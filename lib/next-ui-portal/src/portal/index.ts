@@ -1,1 +1,1 @@
-export * from './next-ui-portal';
+export * from './next-ui-portal'

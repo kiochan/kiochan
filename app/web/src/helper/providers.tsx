@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/navigation';
-import { globalConfig } from '../defs/global-config';
+import { useRouter } from 'next/navigation'
+import { globalConfig } from '../defs/global-config'
 
-import { NextUiPortal } from '@kiochan/next-ui-portal';
+import { NextUiPortal } from '@kiochan/next-ui-portal'
 
 export interface ProvidersProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export function Providers(props: Readonly<ProvidersProps>) {
-  const route = useRouter();
+  const route = useRouter()
 
   return (
     <NextUiPortal
@@ -20,5 +20,5 @@ export function Providers(props: Readonly<ProvidersProps>) {
     >
       {props.children}
     </NextUiPortal>
-  );
+  )
 }

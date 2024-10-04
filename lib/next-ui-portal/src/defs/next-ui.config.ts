@@ -1,6 +1,6 @@
 // @ts-check
 
-import type { NextUIPluginConfig } from '@nextui-org/theme';
+import type { NextUIPluginConfig } from '@nextui-org/theme'
 
 export const nextuiConfig: NextUIPluginConfig = {
   prefix: 'nextui', // prefix for themes variables
@@ -19,4 +19,4 @@ export const nextuiConfig: NextUIPluginConfig = {
     },
     // ... custom themes
   },
-};
+}
