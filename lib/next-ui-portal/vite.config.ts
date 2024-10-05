@@ -3,18 +3,12 @@
 import { defineConfig, type LibraryFormats } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
-import {
-  join as pathJoin,
-  relative as pathRelative,
-  resolve as pathResolve,
-} from 'node:path'
-import { resolve as pathPosixResolve } from 'node:path/posix'
+import { join as pathJoin } from 'node:path'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import packageJson from './package.json'
 
 const projectRoot = pathJoin(__dirname, '..', '..')
 const srcDirname = 'src'
-const srcRoot = pathJoin(__dirname, srcDirname)
 const fileName = 'index'
 const entry = `${srcDirname}/${fileName}.ts`
 const formats: LibraryFormats[] = ['es', 'cjs']
@@ -73,7 +67,7 @@ export default defineConfig({
         '@nextui-org/theme',
       ],
       output: formats.map((format) => ({
-        format: format,
+        format,
         preserveModules: true,
         entryFileNames: (chunkInfo) => {
           return `${chunkInfo.name}.${format === 'es' ? 'js' : 'cjs'}`

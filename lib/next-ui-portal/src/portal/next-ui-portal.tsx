@@ -1,6 +1,6 @@
 'use client'
 
-import { Provider, ProviderProps } from './provider'
+import { Provider, type ProviderProps } from './provider'
 import { Navbar } from '../components/navbar'
 import type { Pages } from '../types/page-config'
 
@@ -12,7 +12,9 @@ export interface NextUiPortalProps {
   pages: Readonly<Pages>
 }
 
-export function NextUiPortal(props: Readonly<NextUiPortalProps>) {
+export function NextUiPortal(
+  props: Readonly<NextUiPortalProps>,
+): React.JSX.Element {
   return (
     <Provider navigate={props.navigate} darkMode={props.darkMode}>
       <div className='min-h-screen'>

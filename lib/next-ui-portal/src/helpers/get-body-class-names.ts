@@ -1,4 +1,4 @@
-import { MainConfig } from '../types'
+import type { MainConfig } from '../types'
 
 export function getBodyClassName(config: MainConfig): string {
   const darkMode = config.appearance.darkMode

@@ -1,6 +1,6 @@
-import { AppearanceConfig } from './appearance-config'
-import { Pages } from './page-config'
-import { SiteConfig } from './site-config'
+import type { AppearanceConfig } from './appearance-config'
+import type { Pages } from './page-config'
+import type { SiteConfig } from './site-config'
 
 export interface MainConfig {
   site: SiteConfig

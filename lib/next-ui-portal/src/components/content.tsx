@@ -1,4 +1,4 @@
-export default function ThreeColumnLayout() {
+export default function ThreeColumnLayout(): React.JSX.Element {
   return (
     <div className='flex flex-wrap min-h-screen bg-gray-100 text-gray-800'>
       <aside className='w-full md:w-1/4 lg:w-1/6 bg-blue-500 p-4 text-white'>
