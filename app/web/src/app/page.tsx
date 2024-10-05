@@ -6,7 +6,7 @@ export const metadata: Metadata = formatMeta({
   page: 'home',
 })
 
-export default function Index() {
+export default function Index(): React.JSX.Element {
   return (
     <SingleMessageContent
       title='Just Home'
