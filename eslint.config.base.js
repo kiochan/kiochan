@@ -10,7 +10,7 @@ const tsEslint = require('typescript-eslint')
 module.exports = [
   love,
   {
-    files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 'latest',
@@ -66,12 +66,25 @@ module.exports = [
     },
   },
   {
-    files: ['*.spec.ts', '*.spec.tsx', '*.spec.js', '*.spec.jsx'],
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: true,
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
     env: {
       jest: true,
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', 'build/', '.nx/'],
+    ignores: ['node_modules/', 'dist/', 'build/', '.nx/', 'next-env.d.ts'],
   },
 ]

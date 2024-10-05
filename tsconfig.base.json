@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "strictNullChecks": true,
     "jsx": "react-jsx",
+    "resolveJsonModule": true,
     "paths": {
       "@kiochan/next-ui-portal": ["lib/next-ui-portal/src/index.ts"]
     }
