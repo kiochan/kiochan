@@ -6,14 +6,14 @@ import {
   Button,
   Link,
 } from '@nextui-org/react'
-import { PageConfig, Pages } from '../types/page-config'
+import type { PageConfig, Pages } from '../types/page-config'
 import { Fragment } from 'react/jsx-runtime'
 
 export interface NavbarProps {
   pages: Readonly<Pages>
 }
 
-export function Navbar(props: NavbarProps) {
+export function Navbar(props: NavbarProps): React.JSX.Element {
   return (
     <NextUINavbar isBordered>
       <NavbarBrand>

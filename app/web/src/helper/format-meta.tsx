@@ -17,15 +17,18 @@ export function formatTitle<T extends PageTitle>(title: T): `${T} - ${SiteName}`
 export function formatTitle<T extends PageTitle>(
   title?: T | null,
 ): SiteName | `${T} - ${SiteName}` {
-  if (title) {
+  if (title !== null && title !== undefined) {
     return `${title} - ${globalConfig.site.name}`
   }
   return globalConfig.site.name
 }
 
-export function formatMeta<T extends MetaSettings>(settings: T): Metadata {
+export function formatMeta(settings: MetaSettings): Metadata {
+  const firstPageIndex = 0
   const currentPageConfig =
-    globalConfig.pages.filter(({ id }) => id === settings.page)[0] ?? {}
+    globalConfig.pages.filter(({ id }) => id === settings.page)[
+      firstPageIndex
+    ] ?? {}
 
   const title = formatTitle(currentPageConfig.title)
 
