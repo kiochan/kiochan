@@ -1,12 +1,13 @@
 import { SingleMessageContent } from '@kiochan/next-ui-portal'
-import { Metadata } from 'next/types'
+import type { Metadata } from 'next/types'
 import { formatMeta } from '../../helper/format-meta'
+import React from 'react'
 
 export const metadata: Metadata = formatMeta({
   page: 'blog',
 })
 
-export default function BlogPage() {
+export default function BlogPage(): React.JSX.Element {
   return (
     <SingleMessageContent
       title='Unauthorized'
