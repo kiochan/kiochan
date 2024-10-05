@@ -78,6 +78,7 @@
     "@nextui-org/react": "^2.3.6",
     "@nextui-org/system": "0.0.0-canary-20240504162810",
     "@nextui-org/theme": "^2.2.3",
+    "eslint-plugin-jest": "^28.8.3",
     "framer-motion": "^11.2.6",
     "next": "^14.2.3",
     "react": "^18.3.1",
