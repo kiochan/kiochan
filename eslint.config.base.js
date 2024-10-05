@@ -1,4 +1,5 @@
 // eslint.config.base.js
+const globals = require('globals')
 const love = require('eslint-config-love')
 const nxPlugin = require('@nx/eslint-plugin')
 const importPlugin = require('eslint-plugin-import')
@@ -6,6 +7,7 @@ const prettierPlugin = require('eslint-plugin-prettier')
 const reactPlugin = require('eslint-plugin-react')
 const reactHooksPlugin = require('eslint-plugin-react-hooks')
 const tsEslint = require('typescript-eslint')
+const jest = require('eslint-plugin-jest')
 
 module.exports = [
   love,
@@ -80,9 +82,12 @@ module.exports = [
   },
   {
     files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
-    env: {
-      jest: true,
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
     },
+    plugins: { jest },
   },
   {
     ignores: ['node_modules/', 'dist/', 'build/', '.nx/', 'next-env.d.ts'],
