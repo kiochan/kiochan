@@ -19,7 +19,7 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "paths": {
-      "@kiochan/next-ui-portal": ["lib/next-ui-portal/src/index.ts"]
+      "@kiochan/next-ui-portal": ["lib/next-ui-portal/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

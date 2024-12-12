@@ -5,6 +5,19 @@
   "projectType": "application",
   "tags": [],
   "// targets": "to see all targets run: nx show project app-web --web",
-  "targets": {},
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "root": "apps/app-web",
+        "outputPath": "dist/apps/app-web",
+        "configuration": "production"
+      },
+      "configurations": {
+        "production": {}
+      }
+    }
+  },
   "implicitDependencies": ["@kiochan/next-ui-portal"]
 }

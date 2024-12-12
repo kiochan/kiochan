@@ -6,6 +6,7 @@ import dts from 'vite-plugin-dts'
 import { join as pathJoin } from 'node:path'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import packageJson from './package.json'
+import preserveDirectives from 'rollup-plugin-preserve-directives'
 
 const projectRoot = pathJoin(__dirname, '..', '..')
 const srcDirname = 'src'
@@ -24,6 +25,7 @@ export default defineConfig({
       entryRoot: 'src',
       tsconfigPath: pathJoin(__dirname, 'tsconfig.lib.json'),
     }),
+    preserveDirectives(),
   ],
 
   // Uncomment this if you are using workers.
