@@ -115,7 +115,7 @@ jobs:
         run: npx nx affected --verbose --base=origin/dev --target=test
 
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container:
       image: mcr.microsoft.com/playwright:v1.45.1-jammy
     needs: build
