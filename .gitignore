@@ -23,6 +23,8 @@ node_modules
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
 
 # misc
 /.sass-cache
