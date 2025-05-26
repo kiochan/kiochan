@@ -1,21 +1,31 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
-import * as path from 'path';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { defineConfig, type LibraryFormats } from 'vite'
+import react from '@vitejs/plugin-react'
+import dts from 'vite-plugin-dts'
+import { join as pathJoin } from 'node:path'
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import projectJson from './project.json'
+import preserveDirectives from 'rollup-plugin-preserve-directives'
+
+const projectRoot = pathJoin(__dirname, '..', '..')
+const srcDirname = 'src'
+const fileName = 'index'
+const entry = `${srcDirname}/${fileName}.ts`
+const formats: LibraryFormats[] = ['es', 'cjs']
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/kiochan/next-ui-portal',
+  cacheDir: pathJoin(projectRoot, 'node_modules/.vite/kiochan/next-ui-portal'),
 
   plugins: [
     react(),
     nxViteTsPaths(),
     dts({
       entryRoot: 'src',
-      tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
+      tsconfigPath: pathJoin(__dirname, 'tsconfig.lib.json'),
     }),
+    preserveDirectives(),
   ],
 
   // Uncomment this if you are using workers.
@@ -26,21 +36,26 @@ export default defineConfig({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/next-ui-portal',
+    outDir: pathJoin(projectRoot, 'dist/next-ui-portal'),
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    terserOptions: {
+      format: {
+        comments: true, // keep comments
+      },
+    },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
-      name: '@kiochan/next-ui-portal',
-      fileName: 'index',
+      entry,
+      name: projectJson.name,
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
-      formats: ['es', 'cjs'],
+      formats,
     },
+
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: [
@@ -52,8 +67,14 @@ export default defineConfig({
         '@nextui-org/react',
         '@nextui-org/system',
         '@nextui-org/theme',
-        '@kiochan/source',
       ],
+      output: formats.map((format) => ({
+        format,
+        preserveModules: true,
+        entryFileNames: (chunkInfo) => {
+          return `${chunkInfo.name}.${format === 'es' ? 'js' : 'cjs'}`
+        },
+      })),
     },
   },
-});
+})

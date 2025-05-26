@@ -23,13 +23,16 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../web/.next/types/**/*.ts",
+    "eslint.config.js",
+    "../../eslint.config.base.js",
     "../../dist/web/.next/types/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "dist/types/**/*.ts",
     "../../dist/types/**/*.ts",
-    "../../dist/app-web/types/**/*.ts"
+    "../../dist/app-web/types/**/*.ts",
+    "eslint.config.js",
+    "../../dist/dist/app-web/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": ["node_modules", "jest.config.js", "**/*.spec.ts", "**/*.test.ts"]
 }

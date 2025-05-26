@@ -1,3 +1,3 @@
 export interface AppearanceConfig {
-  darkMode: boolean;
+  darkMode: boolean
 }

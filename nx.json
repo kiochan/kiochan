@@ -7,6 +7,7 @@
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/eslint.config.base.js",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
@@ -14,14 +15,6 @@
       "!{projectRoot}/test-setup.[jt]s"
     ],
     "sharedGlobals": []
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nx/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
-    }
   },
   "plugins": [
     {
@@ -75,5 +68,10 @@
       }
     }
   },
-  "nxCloudAccessToken": "OWRiZDk1OTMtOTU3OC00OWUwLWIxMGMtODExZjkxN2QwMTY4fHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "OWRiZDk1OTMtOTU3OC00OWUwLWIxMGMtODExZjkxN2QwMTY4fHJlYWQtd3JpdGU=",
+  "targetDefaults": {
+    "e2e-ci--**/**": {
+      "dependsOn": ["^build"]
+    }
+  }
 }

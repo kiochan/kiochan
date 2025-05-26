@@ -1,4 +1,5 @@
-const { join } = require('path');
+/* eslint-disable @typescript-eslint/no-require-imports */
+const { join } = require('path')
 
 // Note: If you use library-specific PostCSS/Tailwind configuration then you should remove the `postcssConfig` build
 // option from your application's configuration (i.e. project.json).
@@ -12,4 +13,4 @@ module.exports = {
     },
     autoprefixer: {},
   },
-};
+}

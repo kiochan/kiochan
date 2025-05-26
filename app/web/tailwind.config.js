@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // @ts-check
 // import type { Config } from 'tailwindcss/types/config';
 /**
  * @typedef {import('tailwindcss/types/config').Config} Config
  */
-const { join } = require('path');
+const { join } = require('path')
 
-const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
-const { nextui } = require('@nextui-org/react');
+const { createGlobPatternsForDependencies } = require('@nx/react/tailwind')
+const { nextui } = require('@nextui-org/react')
 
-const { nextuiConfig } = require('@kiochan/next-ui-portal');
+const { nextuiConfig } = require('@kiochan/next-ui-portal')
 
 /**
  * Generates a Tailwind CSS configuration object based on the provided directory.
@@ -18,8 +19,8 @@ const { nextuiConfig } = require('@kiochan/next-ui-portal');
  * @returns {Config} The Tailwind CSS configuration object customized for the provided directory.
  */
 function generateTailwindConfig(dirname) {
-  const workspaceRoot = join(dirname, '../../');
-  const projectRoot = dirname;
+  const workspaceRoot = join(dirname, '../../')
+  const projectRoot = dirname
 
   return {
     content: [
@@ -27,18 +28,18 @@ function generateTailwindConfig(dirname) {
       ...createGlobPatternsForDependencies(projectRoot),
       join(
         projectRoot,
-        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
       ),
       // lib/*
       join(
         workspaceRoot,
         'lib/*/',
-        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+        '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
       ),
       // next-ui preset
       join(
         workspaceRoot,
-        './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
+        './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
       ),
     ],
     theme: {
@@ -46,7 +47,7 @@ function generateTailwindConfig(dirname) {
     },
     plugins: [nextui(nextuiConfig)],
     darkMode: 'class',
-  };
+  }
 }
 
-module.exports = generateTailwindConfig(__dirname);
+module.exports = generateTailwindConfig(__dirname)

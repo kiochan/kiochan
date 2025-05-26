@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
+    "composite": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -14,8 +15,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
     "paths": {
-      "@kiochan/next-ui-portal": ["lib/next-ui-portal/src/index.ts"]
+      "@kiochan/next-ui-portal": ["lib/next-ui-portal/src/"]
     }
   },
   "exclude": ["node_modules", "tmp"]
