@@ -1,3 +1,16 @@
 {
-  "nxConsole.generateAiAgentRules": true
+  "files.watcherExclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true,
+    "**/coverage": true
+  },
+  "nxConsole.generateAiAgentRules": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true,
+    "**/coverage": true
+  },
+  "typescript.tsserver.maxTsServerMemory": 4096
 }
