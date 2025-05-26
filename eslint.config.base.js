@@ -1,95 +1,74 @@
-// eslint.config.base.js
-const globals = require('globals')
-const love = require('eslint-config-love')
-const nxPlugin = require('@nx/eslint-plugin')
-const importPlugin = require('eslint-plugin-import')
-const prettierPlugin = require('eslint-plugin-prettier')
-const reactPlugin = require('eslint-plugin-react')
-const reactHooksPlugin = require('eslint-plugin-react-hooks')
-const tsEslint = require('typescript-eslint')
-const jest = require('eslint-plugin-jest')
+import globals from 'globals'
+import eslintPluginImport from 'eslint-plugin-import'
+import eslintPluginReact from 'eslint-plugin-react'
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
+import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
+import typescriptParser from '@typescript-eslint/parser'
+import prettierPlugin from 'eslint-plugin-prettier'
+import nxPlugin from '@nx/eslint-plugin'
 
-module.exports = [
-  love,
+export default [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     languageOptions: {
-      sourceType: 'module',
       ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: Object.fromEntries(
+        Object.entries(globals.browser).map(([key, value]) => [
+          key.trim(),
+          value,
+        ]),
+      ),
     },
     plugins: {
-      '@nx': nxPlugin,
-      import: importPlugin,
+      import: eslintPluginImport,
+      '@typescript-eslint': typescriptEslintPlugin,
+      react: eslintPluginReact,
+      'react-hooks': eslintPluginReactHooks,
       prettier: prettierPlugin,
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
+      '@nx': nxPlugin,
     },
     rules: {
+      'prettier/prettier': 'error',
       '@nx/enforce-module-boundaries': [
         'error',
         {
           enforceBuildableLibDependency: true,
           allow: [],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
+          depConstraints: [{ sourceTag: '*', onlyDependOnLibsWithTags: ['*'] }],
         },
       ],
-      'prettier/prettier': 'error',
-    },
-  },
-  {
-    files: ['*.ts', '*.tsx'],
-    linterOptions: {
-      reportUnusedDisableDirectives: 'error',
-    },
-    languageOptions: {
-      parserOptions: {
-        project: [
-          './app/**/tsconfig.json',
-          './lib/**/tsconfig.json',
-          './e2e/**/tsconfig.json',
-        ],
-      },
-    },
-  },
-  {
-    files: ['**/*.js'],
-    ...tsEslint.configs.disableTypeChecked,
-  },
-  {
-    files: ['**/*.js'],
-    rules: {
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        project: [
+          './tsconfig.json',
+          './app/**/tsconfig.json',
+          './lib/**/tsconfig.json',
+          './e2e/**/tsconfig.json',
+        ],
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
     rules: {
       '@typescript-eslint/consistent-type-imports': [
         'error',
-        {
-          prefer: 'type-imports',
-          disallowTypeAnnotations: true,
-          fixStyle: 'separate-type-imports',
-        },
+        { prefer: 'type-imports', disallowTypeAnnotations: true },
       ],
     },
   },
   {
-    files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-      },
-    },
-    plugins: { jest },
-  },
-  {
-    ignores: ['node_modules/', 'dist/', 'build/', '.nx/', 'next-env.d.ts'],
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      '.nx/**',
+      'next-env.d.ts',
+    ],
   },
 ]

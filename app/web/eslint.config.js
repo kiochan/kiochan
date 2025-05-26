@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @nx/enforce-module-boundaries */
 // eslint.config.js
-const baseConfig = require('../../eslint.config.base')
+import baseConfig from '../../eslint.config.base.js'
 
-module.exports = [...baseConfig]
+export default [...baseConfig]
